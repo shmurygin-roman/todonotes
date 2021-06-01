@@ -3,9 +3,7 @@ from rest_framework.renderers import (BrowsableAPIRenderer, HTMLFormRenderer,
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
-from rest_framework.decorators import action
-from django.shortcuts import get_object_or_404
-
+from rest_framework import status
 from .models import *
 from .serializers import *
 
@@ -19,6 +17,13 @@ class ProjectModelViewSet(ModelViewSet):
     serializer_class = ProjectSerializer
     pagination_class = ProjectLimitOffsetPagination
 
+    def get_queryset(self):
+        queryset = Project.objects.all()
+        name = self.request.query_params.get('name', None)
+        if name:
+            queryset = queryset.filter(name__contains=name)
+        return queryset
+
 
 class ToDoLimitOffsetPagination(LimitOffsetPagination):
     default_limit = 20
@@ -30,10 +35,12 @@ class ToDoModelViewSet(ModelViewSet):
     pagination_class = ToDoLimitOffsetPagination
     filterset_fields = ['project']
 
-    @action(detail=True, methods=['delete'])
-    def delete(self, request, pk=None):
-        queryset = get_object_or_404(ToDo, pk=pk)
-        queryset.is_active = False
-        queryset.save()
-        serializer_class = ToDoSerializer
-        return Response(serializer_class.data)
+    def destroy(self, request, pk=None):
+        try:
+            instance = self.get_object()
+            instance.is_active = False
+            instance.save()
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(status=status.HTTP_204_NO_CONTENT)
