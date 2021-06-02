@@ -1,11 +1,11 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from usersapp.views import UserModelViewSet
 from todoapp.views import ProjectModelViewSet, ToDoModelViewSet
+from usersapp.views import UserCustomViewSet
 
 router = DefaultRouter()
-router.register('user', UserModelViewSet)
+router.register('user', UserCustomViewSet)
 router.register('project', ProjectModelViewSet)
 router.register('todo', ToDoModelViewSet)
 
