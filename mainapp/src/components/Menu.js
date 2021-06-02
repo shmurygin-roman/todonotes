@@ -3,8 +3,8 @@ var style = {
     borderTop: "1px solid #E7E7E7",
     textAlign: "center",
     padding: "10px",
-    height: "30px",
-    width: "100%",
+    height: "60px",
+    width: "100%"
 }
 
 
