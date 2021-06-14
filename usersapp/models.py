@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    age = models.PositiveIntegerField()
+    age = models.PositiveIntegerField(default=18)
     email = models.EmailField(unique=True)
 
     def __str__(self):
